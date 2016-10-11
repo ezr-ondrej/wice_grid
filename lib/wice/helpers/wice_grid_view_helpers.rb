@@ -174,7 +174,7 @@ module Wice
         opts = opts ? opts.clone : {}
 
         column_block_output = if column.class == Columns.get_view_column_processor(:action)
-          cell_block.call(ar, params)
+          cell_block.call(ar, params.to_unsafe_h)
         else
           call_block(cell_block, ar)
         end
@@ -326,7 +326,7 @@ module Wice
             rendering.column_link(
               column,
               direction,
-              params,
+              params.to_unsafe_h,
               options[:extra_request_parameters]
             ),
             class: link_style)
