@@ -510,7 +510,7 @@ module Wice
 ) +
           %(     "Add line\\n//= require wice_grid.js\\n" +
 ) +
-          %$     "to app/assets/javascripts/application.js")\\n$ +
+          %$     "to app/assets/javascripts/application.js")\n$ +
           %( }
 ) +
           %$ }) $)
