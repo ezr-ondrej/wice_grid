@@ -61,6 +61,8 @@ module Wice
     end
 
     class ConditionsGeneratorColumnString < ConditionsGeneratorColumn  #:nodoc:
+      STRICT_MATCH = false
+
       def generate_conditions(table_alias, opts)   #:nodoc:
         if opts.is_a? String
           string_fragment = opts
@@ -77,14 +79,17 @@ module Wice
         end
 
         string_matching_operator = ::Wice.get_string_matching_operators(@column_wrapper.model)
+        fragments = STRICT_MATCH ? [string_fragment] : string_fragment.split(/\s+/)
 
-        comparator = if string_matching_operator == 'CI_LIKE'
-          " #{negation}  UPPER(#{@column_wrapper.alias_or_table_name(table_alias)}.#{@column_wrapper.name}) LIKE  UPPER(?)"
-        else
-          " #{negation}  #{@column_wrapper.alias_or_table_name(table_alias)}.#{@column_wrapper.name} #{string_matching_operator} ?"
+        conds = fragments.map do |fragment|
+          if string_matching_operator == 'CI_LIKE'
+            " #{negation}  UPPER(#{@column_wrapper.alias_or_table_name(table_alias)}.#{@column_wrapper.name}) LIKE  UPPER(?)"
+          else
+            " #{negation}  #{@column_wrapper.alias_or_table_name(table_alias)}.#{@column_wrapper.name} #{string_matching_operator} ?"
+          end
         end
 
-        [ comparator, '%' + string_fragment + '%' ]
+        [ '('+conds.join(' AND ')+')' ] + fragments.map{|frag| '%' + frag + '%' }
 
       end
     end
