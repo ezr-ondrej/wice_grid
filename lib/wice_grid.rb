@@ -376,8 +376,7 @@ module Wice
     end
 
     def each   #:nodoc:
-      self.read unless @resultset # database querying is late!
-      @resultset.each do |r|
+      resultset.each do |r|
         yield r
       end
     end
