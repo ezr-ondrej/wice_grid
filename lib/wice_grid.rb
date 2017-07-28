@@ -570,7 +570,7 @@ module Wice
     end
 
     def this_grid_params  #:nodoc:
-      params[name]
+      params[name].to_unsafe_h
     end
 
     def resultset_without_paging_without_user_filters  #:nodoc:
