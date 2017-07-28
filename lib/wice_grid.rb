@@ -566,10 +566,11 @@ module Wice
     end
 
     def params  #:nodoc:
-      @controller.params
+      @controller.params.to_unsafe_h
     end
 
     def this_grid_params  #:nodoc:
+      binding.pry
       params[name]
     end
 
