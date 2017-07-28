@@ -570,7 +570,6 @@ module Wice
     end
 
     def this_grid_params  #:nodoc:
-      binding.pry
       params[name]
     end
 
