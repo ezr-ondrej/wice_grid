@@ -187,9 +187,9 @@ module Wice
 
     def process_loading_query #:nodoc:
       @saved_query = nil
-      if params[name] && params[name][:q]
-        @saved_query = load_query(params[name][:q])
-        params[name].delete(:q)
+      if this_grid_params && this_grid_params[:q]
+        @saved_query = load_query(this_grid_params[:q])
+        this_grid_params.delete(:q)
       elsif @options[:saved_query]
         if @options[:saved_query].is_a? ActiveRecord::Base
           @saved_query = @options[:saved_query]
@@ -201,12 +201,12 @@ module Wice
       end
 
       unless @saved_query.nil?
-        params[name] = HashWithIndifferentAccess.new if params[name].blank?
+        this_grid_params = HashWithIndifferentAccess.new if this_grid_params.blank?
         [:f, :order, :order_direction].each do |key|
           if @saved_query.query[key].blank?
-            params[name].delete(key)
+            this_grid_params.delete(key)
           else
-            params[name][key] = @saved_query.query[key]
+            this_grid_params[key] = @saved_query.query[key]
           end
         end
       end
@@ -498,7 +498,7 @@ module Wice
     end
 
     def dump_status #:nodoc:
-      "   params: #{params[name].inspect}\n" + "   status: #{@status.inspect}\n" \
+      "   params: #{this_grid_params.inspect}\n" + "   status: #{@status.inspect}\n" \
         "   ar_options #{@ar_options.inspect}\n"
     end
 
@@ -566,7 +566,7 @@ module Wice
     end
 
     def params  #:nodoc:
-      @controller.params.to_unsafe_h
+      @controller.params
     end
 
     def this_grid_params  #:nodoc:
